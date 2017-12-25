@@ -10,3 +10,24 @@
 ```
 npm install --save @tepez/jasmine-protractor-matchers
 ```
+
+## Usage
+
+### Javascript
+```js
+const matchers = require('@tepez/jasmine-protractor-matchers');
+
+beforeEach(() => {
+    jasmine.addMatchers(matchers);
+});
+```
+
+### Typescript
+
+```typescript
+import {matchers} from '@tepez/jasmine-protractor-matchers'
+
+beforeEach(() => {
+    jasmine.addMatchers(matchers);
+});
+```
