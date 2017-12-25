@@ -1,0 +1,37 @@
+{
+  "name": "@tepez/jasmine-protractor-matchers",
+  "version": "0.0.0",
+  "description": "Custom jasmine2 matchers for writing cleaner e2e tests with protractor",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node node_modules/gulp/bin/gulp.js build",
+    "test": "node node_modules/gulp/bin/gulp.js build-unit-test",
+    "update": "node node_modules/gulp/bin/gulp.js build && np --no-publish --no-yarn"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tepez/jasmine-protractor-matchers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tepez/jasmine-protractor-matchers/issues"
+  },
+  "homepage": "https://github.com/tepez/jasmine-protractor-matchers#readme",
+  "dependencies": {
+    "lodash.difference": "^4.5.0",
+    "lodash.intersection": "^4.4.0",
+    "tinycolor2": "^1.4.1"
+  },
+  "devDependencies": {
+    "@tepez/typescript-build-gulp-tasks": "^2.0.1",
+    "@types/jasmine": "^2.8.2",
+    "@types/jasminewd2": "^2.0.3",
+    "@types/node": "^8.5.2",
+    "@types/tinycolor2": "^1.4.0",
+    "gulp": "^3.9.1",
+    "jasmine": "^2.8.0",
+    "protractor": "^5.2.2"
+  }
+}
