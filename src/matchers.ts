@@ -1,20 +1,24 @@
 import { ElementFinder } from 'protractor'
-import { ICssValueCompareOptions, IElementLocation, IElementSize } from './types';
-import AsyncCustomMatcherResult = jasmine.AsyncCustomMatcherResult;
 import * as Tinycolor2 from 'tinycolor2'
 import * as Util from 'util'
+import { ICssValueCompareOptions, IElementLocation, IElementSize } from './types'
+import difference = require('lodash.difference');
+import intersection = require('lodash.intersection');
+import AsyncCustomMatcherResult = jasmine.AsyncCustomMatcherResult;
 import CustomMatcherFactories = jasmine.CustomMatcherFactories;
-const intersection = require('lodash.intersection');
-const difference = require('lodash.difference');
 
 
-// Add quotes to a string, e.g. str => "str"
+/**
+ * Add quotes to a string, e.g. str => "str"
+ *
+ * @param str
+ */
 function quoteStr(str: string): string {
     return `"${str}"`;
 }
 
 export const matchers = {
-    toBePresent: function () {
+    toBePresent: () => {
         return {
             compare: (element: ElementFinder): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
@@ -29,11 +33,11 @@ export const matchers = {
         };
     },
 
-    toBeDisplayed: function () {
+    toBeDisplayed: () => {
         return {
             compare: (element: ElementFinder): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.isDisplayed().then(function (isDisplayed) {
+                    pass: element.isDisplayed().then((isDisplayed: boolean) => {
                         const pass = !!isDisplayed;
                         ret.message = `Expected ${pass ? 'NOT ' : ''}to be displayed`;
                         return pass;
@@ -44,11 +48,11 @@ export const matchers = {
         };
     },
 
-    toContainText: function () {
+    toContainText: () => {
         return {
-            compare: function (element: ElementFinder, expectedText: string): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, expectedText: string): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getText().then((actualText) => {
+                    pass: element.getText().then((actualText: string) => {
                         const pass = actualText.indexOf(expectedText.trim()) >= 0;
                         if (pass) {
                             ret.message = `Expected NOT to contain text ${quoteStr(expectedText)}`;
@@ -63,11 +67,11 @@ export const matchers = {
         };
     },
 
-    toHaveExactText: function () {
+    toHaveExactText: () => {
         return {
-            compare: function (element: ElementFinder, expectedText: string): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, expectedText: string): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getText().then((actualText) => {
+                    pass: element.getText().then((actualText: string) => {
                         const pass = actualText.trim() === expectedText.trim();
                         if (pass) {
                             ret.message = `Expected NOT to have text ${quoteStr(expectedText)}`;
@@ -82,17 +86,20 @@ export const matchers = {
         };
     },
 
-    toHaveTextMatchedBy: function () {
+    toHaveTextMatchedBy: () => {
         return {
-            compare: function (element: ElementFinder, pattern): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, pattern: string | RegExp): AsyncCustomMatcherResult => {
                 if (!Util.isRegExp(pattern) && !Util.isString(pattern)) {
                     throw new Error(`toHaveTextMatchedBy expects either a RegExp or a string, given: ${pattern}`)
                 }
-                if (Util.isString(pattern)) pattern = new RegExp(pattern);
+
+                const regex = Util.isString(pattern)
+                    ? new RegExp(pattern)
+                    : pattern;
 
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getText().then((actualText) => {
-                        const pass = pattern.test(actualText);
+                    pass: element.getText().then((actualText: string) => {
+                        const pass = regex.test(actualText);
                         if (pass) {
                             ret.message = `Expected NOT to have match ${pattern}`;
                         } else {
@@ -106,11 +113,11 @@ export const matchers = {
         };
     },
 
-    toHaveValue: function () {
+    toHaveValue: () => {
         return {
             compare: (element: ElementFinder, expectedValue: string): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getAttribute('value').then((actualValue) => {
+                    pass: element.getAttribute('value').then((actualValue: string) => {
                         const pass = actualValue === expectedValue;
                         if (pass) {
                             ret.message = `Expected NOT to have value ${quoteStr(expectedValue)}`;
@@ -125,11 +132,11 @@ export const matchers = {
         };
     },
 
-    toHaveAttribute: function () {
+    toHaveAttribute: () => {
         return {
             compare: (element: ElementFinder, attribute: string, expectedValue: string): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getAttribute(attribute).then((actualValue) => {
+                    pass: element.getAttribute(attribute).then((actualValue: string) => {
                         const pass = actualValue === expectedValue;
 
                         if (pass) {
@@ -146,11 +153,11 @@ export const matchers = {
         };
     },
 
-    toMatchAttribute: function () {
+    toMatchAttribute: () => {
         return {
-            compare: function (element: ElementFinder, attribute: string, expectedMatch: string | RegExp): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, attribute: string, expectedMatch: string | RegExp): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getAttribute(attribute).then(function (actualValue) {
+                    pass: element.getAttribute(attribute).then((actualValue: string) => {
                         const regex = new RegExp(expectedMatch);
                         const pass = regex.test(actualValue);
                         if (pass) {
@@ -166,11 +173,11 @@ export const matchers = {
         };
     },
 
-    toBeChecked: function () {
+    toBeChecked: () => {
         return {
             compare: (element: ElementFinder) => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getAttribute('checked').then((checked) => {
+                    pass: element.getAttribute('checked').then((checked: string) => {
                         const pass = checked === 'true';
                         ret.message = `Expected ${pass ? ' NOT ' : ''} to be checked`;
                         return pass;
@@ -181,11 +188,11 @@ export const matchers = {
         };
     },
 
-    toBeSelected: function () {
+    toBeSelected: () => {
         return {
             compare: (element: ElementFinder) => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.isSelected().then(function (isSelected) {
+                    pass: element.isSelected().then((isSelected: boolean) => {
                         const pass = !!isSelected;
                         ret.message = `Expected ${pass ? ' NOT ' : ''} to be selected`;
                         return pass;
@@ -196,11 +203,11 @@ export const matchers = {
         };
     },
 
-    toHaveWidth: function () {
+    toHaveWidth: () => {
         return {
-            compare: function (element: ElementFinder, expectedWidth): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, expectedWidth: number): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getSize().then(function (size) {
+                    pass: element.getSize().then((size: IElementSize) => {
                         const pass = size.width == expectedWidth;
                         if (pass) {
                             ret.message = `Expected NOT to have width ${expectedWidth}`;
@@ -215,15 +222,15 @@ export const matchers = {
         };
     },
 
-    toHaveSize: function () {
-        const sizeToString = (size) => {
+    toHaveSize: () => {
+        function sizeToString(size: IElementSize): string {
             return `Width: ${size.width}, Height: ${size.height}`;
-        };
+        }
 
         return {
-            compare: function (element: ElementFinder, expectedSize: IElementSize): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, expectedSize: IElementSize): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getSize().then((actualSize) => {
+                    pass: element.getSize().then((actualSize: IElementSize) => {
                         const pass = actualSize.width === expectedSize.width &&
                             actualSize.height === expectedSize.height;
                         if (pass) {
@@ -239,11 +246,11 @@ export const matchers = {
         };
     },
 
-    toBeAtLocationX: function () {
+    toBeAtLocationX: () => {
         return {
-            compare: function (element: ElementFinder, expectedX): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, expectedX: number): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getLocation().then(function (actualLocation) {
+                    pass: element.getLocation().then((actualLocation: IElementLocation) => {
                         const pass = actualLocation.x === expectedX;
                         if (pass) {
                             ret.message = `Expected to be at location X ${expectedX} but is at location X ${actualLocation.x}`;
@@ -258,17 +265,17 @@ export const matchers = {
         };
     },
 
-    toBeNearLocation: function () {
+    toBeNearLocation: () => {
         // { x: 1, y: 2 } => "(1, 2)"
         function formatCoordinates(obj: IElementLocation) {
             return `(${obj.x}, ${obj.y})`;
         }
 
         return {
-            compare: function (element: ElementFinder, expectedLocation, maxDistance): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, expectedLocation: IElementLocation, maxDistance: number): AsyncCustomMatcherResult => {
                 maxDistance = Util.isUndefined(maxDistance) ? 2 : maxDistance;
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getLocation().then(function (actualLocation) {
+                    pass: element.getLocation().then((actualLocation: IElementLocation) => {
                         const distance = Math.sqrt(
                             Math.pow(actualLocation.x - expectedLocation.x, 2) +
                             Math.pow(actualLocation.y - expectedLocation.y, 2),
@@ -284,19 +291,19 @@ export const matchers = {
         };
     },
 
-    toHaveClass: function () {
+    toHaveClass: () => {
         return {
-            compare: function (element: ElementFinder, expectedClasses: string): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, expectedClasses: string): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getAttribute('class').then(function (actualClasses) {
+                    pass: element.getAttribute('class').then((actualClasses: string) => {
                         const actualClassesArr = actualClasses.split(/\s/);
                         const expectedClassesArr = expectedClasses.split(/\s/);
                         const notSatisfiedClassesArr = difference(expectedClassesArr, actualClassesArr);
 
                         if (expectedClassesArr.length === 1) {
-                            ret.message = `Expected to have class ${expectedClassesArr[0]}`;
+                            ret.message = `Expected to have class [${expectedClassesArr[0]}], actual classes are [${actualClassesArr.join(', ')}]`;
                         } else {
-                            ret.message = `Expected to have classes ${expectedClassesArr.join(', ')} but does not have classes ${notSatisfiedClassesArr.join(', ')}`;
+                            ret.message = `Expected to have classes [${expectedClassesArr.join(', ')}] but does not have classes [${notSatisfiedClassesArr.join(', ')}], actual classes are [${actualClassesArr.join(', ')}]`;
                         }
 
                         return notSatisfiedClassesArr.length === 0;
@@ -305,17 +312,17 @@ export const matchers = {
                 return ret;
             },
 
-            negativeCompare: function (element: ElementFinder, forbiddenClasses: string): AsyncCustomMatcherResult {
+            negativeCompare: (element: ElementFinder, forbiddenClasses: string): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getAttribute('class').then(function (actualClasses) {
+                    pass: element.getAttribute('class').then((actualClasses: string) => {
                         const actualClassesArr = actualClasses.split(/\s/);
                         const forbiddenClassesArr = forbiddenClasses.split(/\s/);
                         const satisfiedClassesArr = intersection(forbiddenClassesArr, actualClassesArr);
 
                         if (forbiddenClassesArr.length === 1) {
-                            ret.message = `Expected to NOT have class ${forbiddenClassesArr[0]}`;
+                            ret.message = `Expected to NOT have class [${forbiddenClassesArr[0]}], actual classes are [${actualClassesArr.join(', ')}]`;
                         } else {
-                            ret.message = `Expected to NOT have classes ${forbiddenClassesArr.join(', ')} but does have classes ${satisfiedClassesArr.join(', ')}`;
+                            ret.message = `Expected to NOT have classes [${forbiddenClassesArr.join(', ')}] but does have classes [${satisfiedClassesArr.join(', ')}], actual classes are [${actualClassesArr.join(', ')}]`;
                         }
                         return satisfiedClassesArr.length === 0;
                     }) as any as Promise<boolean>,
@@ -326,9 +333,9 @@ export const matchers = {
         };
     },
 
-    toHaveCssValue: function () {
+    toHaveCssValue: () => {
         return {
-            compare: function (element: ElementFinder, cssProperty: string, expectedValue: string, options: ICssValueCompareOptions): AsyncCustomMatcherResult {
+            compare: (element: ElementFinder, cssProperty: string, expectedValue: string, options: ICssValueCompareOptions): AsyncCustomMatcherResult => {
                 if (options && options.normalizeColor) {
                     const parsedColor = Tinycolor2(expectedValue);
                     if (!parsedColor.isValid()) {
@@ -338,7 +345,7 @@ export const matchers = {
                 }
 
                 const ret: AsyncCustomMatcherResult = {
-                    pass: element.getCssValue(cssProperty).then((actualValue) => {
+                    pass: element.getCssValue(cssProperty).then((actualValue: string) => {
                         if (options && options.normalizeColor) {
                             const parsedColor = Tinycolor2(actualValue);
                             if (parsedColor.isValid()) {

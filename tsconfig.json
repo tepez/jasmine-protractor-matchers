@@ -1,12 +1,7 @@
 {
+  "extends": "./node_modules/@tepez/typescript-common/tsconfig-node",
   "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "removeComments": false,
-
     "outDir": "dist",
-
     "declaration": true,
     "declarationDir": "dist"
   }

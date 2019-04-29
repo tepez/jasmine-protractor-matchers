@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "node node_modules/gulp/bin/gulp.js build",
-    "test": "node node_modules/gulp/bin/gulp.js build-unit-test",
-    "update": "node node_modules/gulp/bin/gulp.js build && np --no-publish --no-yarn"
+    "build": "npx gulp build",
+    "test": "npx gulp build-unit-test",
+    "update": "npx gulp build && npx np --no-publish --no-yarn"
   },
   "repository": {
     "type": "git",
@@ -25,13 +25,17 @@
     "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
-    "@tepez/typescript-build-gulp-tasks": "^2.0.1",
-    "@types/jasmine": "^2.8.2",
-    "@types/jasminewd2": "^2.0.3",
-    "@types/node": "^8.5.2",
-    "@types/tinycolor2": "^1.4.0",
-    "gulp": "^3.9.1",
-    "jasmine": "^2.8.0",
-    "protractor": "^5.2.2"
+    "@tepez/typescript-build-gulp-tasks": "^5.1.1",
+    "@tepez/typescript-common": "^0.2.1",
+    "@types/gulp": "^4.0.6",
+    "@types/jasmine": "^3.3.12",
+    "@types/jasminewd2": "^2.0.6",
+    "@types/lodash.difference": "^4.5.6",
+    "@types/lodash.intersection": "^4.4.6",
+    "@types/node": "^8.10.47",
+    "@types/tinycolor2": "^1.4.1",
+    "gulp": "^4.0.1",
+    "jasmine": "^3.4.0",
+    "protractor": "^5.4.2"
   }
 }

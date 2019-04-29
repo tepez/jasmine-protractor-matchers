@@ -29,7 +29,7 @@ declare global {
 
             toHaveAttribute(attribute: string, expectedValue: string): boolean
 
-            toMatchAttribute(attribute: string, expectedValue: string): boolean
+            toMatchAttribute(attribute: string, expectedValue: string | RegExp): boolean
 
             toBeChecked(): boolean
 
@@ -41,7 +41,9 @@ declare global {
 
             toHaveClass(expectedClasses: string): boolean
 
-            toBeNearLocation(expectedLocation: IElementLocation, maxDistance?: number)
+            toBeAtLocationX(expectedX: number): boolean
+
+            toBeNearLocation(expectedLocation: IElementLocation, maxDistance?: number): boolean
 
             toHaveCssValue(toHaveCssValue: string, expectedValue: string, options?: ICssValueCompareOptions): boolean
         }

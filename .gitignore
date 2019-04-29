@@ -1,4 +1,4 @@
-node_modules/
-.idea/
-reports/
-dist/
+/node_modules/
+/.idea/
+/reports/
+/dist/
