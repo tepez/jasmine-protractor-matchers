@@ -9,12 +9,13 @@ import CustomMatcherFactories = jasmine.CustomMatcherFactories;
 
 
 /**
- * Add quotes to a string, e.g. str => "str"
+ * Wrap a string to be displayed in an error message so that it will be easy to copy
+ * it from the console
  *
  * @param str
  */
-function quoteStr(str: string): string {
-    return `"${str}"`;
+function wrapString(str: string): string {
+    return `[\n${str}\n]"`;
 }
 
 export const matchers = {
@@ -55,9 +56,9 @@ export const matchers = {
                     pass: element.getText().then((actualText: string) => {
                         const pass = actualText.indexOf(expectedText.trim()) >= 0;
                         if (pass) {
-                            ret.message = `Expected NOT to contain text ${quoteStr(expectedText)} BUT text is ${quoteStr(actualText)}`;
+                            ret.message = `Expected NOT to contain text ${wrapString(expectedText)} BUT text is ${wrapString(actualText)}`;
                         } else {
-                            ret.message = `Expected to contain text ${quoteStr(expectedText)} BUT text is ${quoteStr(actualText)}`;
+                            ret.message = `Expected to contain text ${wrapString(expectedText)} BUT text is ${wrapString(actualText)}`;
                         }
                         return pass;
                     }) as any as Promise<boolean>,
@@ -74,9 +75,9 @@ export const matchers = {
                     pass: element.getText().then((actualText: string) => {
                         const pass = actualText.trim() === expectedText.trim();
                         if (pass) {
-                            ret.message = `Expected NOT to have text ${quoteStr(expectedText)}`;
+                            ret.message = `Expected NOT to have text ${wrapString(expectedText)}`;
                         } else {
-                            ret.message = `Expected to have text ${quoteStr(expectedText)} BUT has text ${quoteStr(actualText)}`;
+                            ret.message = `Expected to have text ${wrapString(expectedText)} BUT has text ${wrapString(actualText)}`;
                         }
                         return pass;
                     }) as any as Promise<boolean>,
@@ -101,9 +102,9 @@ export const matchers = {
                     pass: element.getText().then((actualText: string) => {
                         const pass = regex.test(actualText);
                         if (pass) {
-                            ret.message = `Expected NOT to have match ${pattern}, BUT text is ${quoteStr(actualText)}`;
+                            ret.message = `Expected NOT to have match ${pattern}, BUT text is ${wrapString(actualText)}`;
                         } else {
-                            ret.message = `Expected to match ${pattern}, BUT text is ${quoteStr(actualText)}`;
+                            ret.message = `Expected to match ${pattern}, BUT text is ${wrapString(actualText)}`;
                         }
                         return pass;
                     }) as any as Promise<boolean>,
@@ -120,9 +121,9 @@ export const matchers = {
                     pass: element.getAttribute('value').then((actualValue: string) => {
                         const pass = actualValue === expectedValue;
                         if (pass) {
-                            ret.message = `Expected NOT to have value ${quoteStr(expectedValue)}`;
+                            ret.message = `Expected NOT to have value ${wrapString(expectedValue)}`;
                         } else {
-                            ret.message = `Expected to have value ${quoteStr(expectedValue)} BUT has value ${quoteStr(actualValue)}`;
+                            ret.message = `Expected to have value ${wrapString(expectedValue)} BUT has value ${wrapString(actualValue)}`;
                         }
                         return pass;
                     }) as any as Promise<boolean>,
@@ -140,9 +141,9 @@ export const matchers = {
                         const pass = actualValue === expectedValue;
 
                         if (pass) {
-                            ret.message = `Expected NOT to have ${attribute} ${quoteStr(expectedValue)}`;
+                            ret.message = `Expected NOT to have ${attribute} ${wrapString(expectedValue)}`;
                         } else {
-                            ret.message = `Expected to have ${attribute} ${quoteStr(expectedValue)} BUT has ${attribute} ${quoteStr(actualValue)}`;
+                            ret.message = `Expected to have ${attribute} ${wrapString(expectedValue)} BUT has ${attribute} ${wrapString(actualValue)}`;
                         }
 
                         return pass;
@@ -161,9 +162,9 @@ export const matchers = {
                         const regex = new RegExp(expectedMatch);
                         const pass = regex.test(actualValue);
                         if (pass) {
-                            ret.message = `Expected ${attribute} NOT to match ${quoteStr(String(regex))} BUT it's value is ${quoteStr(actualValue)}`;
+                            ret.message = `Expected ${attribute} NOT to match ${wrapString(String(regex))} BUT it's value is ${wrapString(actualValue)}`;
                         } else {
-                            ret.message = `Expected ${attribute} to match ${quoteStr(String(regex))} BUT it's value is ${quoteStr(actualValue)}`;
+                            ret.message = `Expected ${attribute} to match ${wrapString(String(regex))} BUT it's value is ${wrapString(actualValue)}`;
                         }
                         return pass;
                     }) as any as Promise<boolean>,
@@ -357,9 +358,9 @@ export const matchers = {
 
                         const pass = actualValue === expectedValue;
                         if (pass) {
-                            ret.message = `Expected NOT to have value ${quoteStr(expectedValue)} for CSS property ${cssProperty}`;
+                            ret.message = `Expected NOT to have value ${wrapString(expectedValue)} for CSS property ${cssProperty}`;
                         } else {
-                            ret.message = `Expected to have value ${quoteStr(expectedValue)} for CSS property ${cssProperty} BUT has value ${quoteStr(actualValue)}`;
+                            ret.message = `Expected to have value ${wrapString(expectedValue)} for CSS property ${cssProperty} BUT has value ${wrapString(actualValue)}`;
                         }
                         return pass;
                     }) as any as Promise<boolean>,
