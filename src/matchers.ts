@@ -55,7 +55,7 @@ export const matchers = {
                     pass: element.getText().then((actualText: string) => {
                         const pass = actualText.indexOf(expectedText.trim()) >= 0;
                         if (pass) {
-                            ret.message = `Expected NOT to contain text ${quoteStr(expectedText)}`;
+                            ret.message = `Expected NOT to contain text ${quoteStr(expectedText)} BUT text is ${quoteStr(actualText)}`;
                         } else {
                             ret.message = `Expected to contain text ${quoteStr(expectedText)} BUT text is ${quoteStr(actualText)}`;
                         }
@@ -101,9 +101,9 @@ export const matchers = {
                     pass: element.getText().then((actualText: string) => {
                         const pass = regex.test(actualText);
                         if (pass) {
-                            ret.message = `Expected NOT to have match ${pattern}`;
+                            ret.message = `Expected NOT to have match ${pattern}, BUT text is ${quoteStr(actualText)}`;
                         } else {
-                            ret.message = `Expected to match ${pattern}`;
+                            ret.message = `Expected to match ${pattern}, BUT text is ${quoteStr(actualText)}`;
                         }
                         return pass;
                     }) as any as Promise<boolean>,
@@ -161,7 +161,7 @@ export const matchers = {
                         const regex = new RegExp(expectedMatch);
                         const pass = regex.test(actualValue);
                         if (pass) {
-                            ret.message = `Expected ${attribute} NOT to match ${quoteStr(String(regex))}`;
+                            ret.message = `Expected ${attribute} NOT to match ${quoteStr(String(regex))} BUT it's value is ${quoteStr(actualValue)}`;
                         } else {
                             ret.message = `Expected ${attribute} to match ${quoteStr(String(regex))} BUT it's value is ${quoteStr(actualValue)}`;
                         }
