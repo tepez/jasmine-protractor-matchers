@@ -44,7 +44,7 @@ describe('matchers', () => {
             'toBeChecked',
             'toBeSelected',
             'toHaveWidth',
-            'toHaveSize',
+            //'toHaveSize',
             // 'toHaveClass',
             'toBeNearLocation',
             'toHaveCssValue',
@@ -56,11 +56,18 @@ describe('matchers', () => {
             });
         }
 
-        it('should override the jasmin\'s default toHaveClass', () => {
+        it(`should override the jasmin's default toHaveClass`, () => {
             const orig = expect({}).toHaveClass;
             expect(expect({}).toHaveClass).toBe(orig);
             jasmine.addMatchers(matchers);
             expect(expect({}).toHaveClass).not.toBe(orig);
+        });
+
+        it(`should override the jasmin's default toHaveSize`, () => {
+            const orig = expect({}).toHaveSize;
+            expect(expect({}).toHaveSize).toBe(orig);
+            jasmine.addMatchers(matchers);
+            expect(expect({}).toHaveSize).not.toBe(orig);
         });
     });
 
