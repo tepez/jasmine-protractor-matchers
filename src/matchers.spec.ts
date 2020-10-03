@@ -6,7 +6,8 @@ interface ISpec {
     element: any
 }
 
-type MatcherName = 'toBePresent'
+type MatcherName =
+    | 'toBePresent'
     | 'toBeDisplayed'
     | 'toContainText'
     | 'toHaveExactText'

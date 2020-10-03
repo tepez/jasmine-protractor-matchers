@@ -27,7 +27,7 @@ export const matchers = {
                         const pass = !!isPresent;
                         ret.message = `Expected ${pass ? 'NOT ' : ''}to be present`;
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -42,7 +42,7 @@ export const matchers = {
                         const pass = !!isDisplayed;
                         ret.message = `Expected ${pass ? 'NOT ' : ''}to be displayed`;
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -61,7 +61,7 @@ export const matchers = {
                             ret.message = `Expected to contain text ${wrapString(expectedText)} BUT text is ${wrapString(actualText)}`;
                         }
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -80,7 +80,7 @@ export const matchers = {
                             ret.message = `Expected to have text ${wrapString(expectedText)} BUT has text ${wrapString(actualText)}`;
                         }
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -90,11 +90,11 @@ export const matchers = {
     toHaveTextMatchedBy: () => {
         return {
             compare: (element: ElementFinder, pattern: string | RegExp): AsyncCustomMatcherResult => {
-                if (!Util.isRegExp(pattern) && !Util.isString(pattern)) {
+                if (!Util.types.isRegExp(pattern) && typeof pattern !== 'string') {
                     throw new Error(`toHaveTextMatchedBy expects either a RegExp or a string, given: ${pattern}`)
                 }
 
-                const regex = Util.isString(pattern)
+                const regex = typeof pattern === 'string'
                     ? new RegExp(pattern)
                     : pattern;
 
@@ -107,7 +107,7 @@ export const matchers = {
                             ret.message = `Expected to match ${pattern}, BUT text is ${wrapString(actualText)}`;
                         }
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -126,7 +126,7 @@ export const matchers = {
                             ret.message = `Expected to have value ${wrapString(expectedValue)} BUT has value ${wrapString(actualValue)}`;
                         }
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -147,7 +147,7 @@ export const matchers = {
                         }
 
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -167,7 +167,7 @@ export const matchers = {
                             ret.message = `Expected ${attribute} to match ${wrapString(String(regex))} BUT it's value is ${wrapString(actualValue)}`;
                         }
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -182,7 +182,7 @@ export const matchers = {
                         const pass = checked === 'true';
                         ret.message = `Expected ${pass ? ' NOT ' : ''} to be checked`;
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -197,7 +197,7 @@ export const matchers = {
                         const pass = !!isSelected;
                         ret.message = `Expected ${pass ? ' NOT ' : ''} to be selected`;
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -216,7 +216,7 @@ export const matchers = {
                             ret.message = `Expected to have width ${expectedWidth} BUT has width ${size.width}`;
                         }
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -240,7 +240,7 @@ export const matchers = {
                             ret.message = `Expected to have size ${sizeToString(expectedSize)}} BUT has size ${sizeToString(actualSize)}`;
                         }
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -259,7 +259,7 @@ export const matchers = {
                             ret.message = `Expected NOT to be at location X ${expectedX}`;
                         }
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -273,8 +273,7 @@ export const matchers = {
         }
 
         return {
-            compare: (element: ElementFinder, expectedLocation: IElementLocation, maxDistance: number): AsyncCustomMatcherResult => {
-                maxDistance = Util.isUndefined(maxDistance) ? 2 : maxDistance;
+            compare: (element: ElementFinder, expectedLocation: IElementLocation, maxDistance = 2): AsyncCustomMatcherResult => {
                 const ret: AsyncCustomMatcherResult = {
                     pass: element.getLocation().then((actualLocation: IElementLocation) => {
                         const distance = Math.sqrt(
@@ -285,7 +284,7 @@ export const matchers = {
                         const pass = distance <= maxDistance;
                         ret.message = `Expected ${pass ? ' NOT' : ''} to be near ${formatCoordinates(expectedLocation)} but is at ${formatCoordinates((actualLocation))}, ${distance} pixels from it.`;
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -308,7 +307,7 @@ export const matchers = {
                         }
 
                         return notSatisfiedClassesArr.length === 0;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -326,7 +325,7 @@ export const matchers = {
                             ret.message = `Expected to NOT have classes [${forbiddenClassesArr.join(', ')}] but does have classes [${satisfiedClassesArr.join(', ')}], actual classes are [${actualClassesArr.join(', ')}]`;
                         }
                         return satisfiedClassesArr.length === 0;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
@@ -363,10 +362,10 @@ export const matchers = {
                             ret.message = `Expected to have value ${wrapString(expectedValue)} for CSS property ${cssProperty} BUT has value ${wrapString(actualValue)}`;
                         }
                         return pass;
-                    }) as any as Promise<boolean>,
+                    }) as Promise<boolean>,
                 };
                 return ret;
             },
         };
     },
-} as any as CustomMatcherFactories;
+} as CustomMatcherFactories;
