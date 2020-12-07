@@ -18,6 +18,27 @@ function wrapString(str: string): string {
     return `[\n${str}\n]"`;
 }
 
+
+/**
+ * Catch errors from matcher and cause the matcher to fail
+ *
+ * @param ret
+ */
+const catchMatcherErrors = (ret: AsyncCustomMatcherResult): AsyncCustomMatcherResult => {
+    const passPromise = ret.pass as Promise<boolean>;
+
+    if (!passPromise.catch) return ret;
+
+    ret.pass = passPromise.catch((err) => {
+        console.error('Error caught in matcher')
+        console.error(err);
+        ret.message = err.message;
+        return false;
+    });
+
+    return ret;
+}
+
 export const matchers = {
     toBePresent: () => {
         return {
@@ -29,7 +50,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -44,7 +65,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -63,7 +84,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -82,7 +103,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -109,7 +130,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -128,7 +149,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -149,7 +170,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -169,7 +190,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -184,7 +205,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -199,7 +220,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -218,7 +239,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -242,7 +263,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -261,7 +282,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -286,7 +307,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
@@ -309,7 +330,7 @@ export const matchers = {
                         return notSatisfiedClassesArr.length === 0;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
 
             negativeCompare: (element: ElementFinder, forbiddenClasses: string): AsyncCustomMatcherResult => {
@@ -327,7 +348,7 @@ export const matchers = {
                         return satisfiedClassesArr.length === 0;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
 
         };
@@ -364,7 +385,7 @@ export const matchers = {
                         return pass;
                     }) as Promise<boolean>,
                 };
-                return ret;
+                return catchMatcherErrors(ret);
             },
         };
     },
