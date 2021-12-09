@@ -1,5 +1,5 @@
 # jasmine-protractor-matchers
-> Custom jasmine2 matchers for writing cleaner e2e tests with protractor
+> Custom jasmine3 async matchers for writing cleaner e2e tests with protractor
 
 [![npm version](https://badge.fury.io/js/%40tepez%2Fjasmine-protractor-matchers.svg)](https://badge.fury.io/js/%40tepez%2Fjasmine-protractor-matchers)
 [![Build Status](https://secure.travis-ci.org/tepez/jasmine-protractor-matchers.svg?branch=master)](http://travis-ci.org/tepez/jasmine-protractor-matchers)
@@ -17,7 +17,7 @@ npm install --save @tepez/jasmine-protractor-matchers
 const matchers = require('@tepez/jasmine-protractor-matchers');
 
 beforeEach(() => {
-    jasmine.addMatchers(matchers);
+    jasmine.addAsyncMatchers(matchers);
 });
 ```
 
@@ -27,6 +27,11 @@ beforeEach(() => {
 import {matchers} from '@tepez/jasmine-protractor-matchers'
 
 beforeEach(() => {
-    jasmine.addMatchers(matchers);
+    jasmine.addAsyncMatchers(matchers);
+});
+
+it('should be displayed', async () => {
+   await expectAsync($('#element')).toBeDisplayed(); 
 });
 ```
+

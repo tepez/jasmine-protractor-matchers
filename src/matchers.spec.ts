@@ -1,10 +1,7 @@
+import { ElementFinder } from 'protractor';
 import { matchers } from './matchers'
+import CustomAsyncMatcher = jasmine.CustomAsyncMatcher;
 
-
-interface ISpec {
-    matcher: any
-    element: any
-}
 
 type MatcherName =
     | 'toBePresent'
@@ -25,11 +22,14 @@ type MatcherName =
 
 
 describe('matchers', () => {
-    let spec: ISpec;
-    afterEach((): void => spec = null);
-    beforeEach(function (this: ISpec) {
-        spec = this;
+    let matcher: CustomAsyncMatcher;
+    let element: Partial<ElementFinder>;
+
+    afterEach((): void => {
+        matcher = null;
+        element = null;
     });
+
 
     describe('calling jasmine.addMatchers on the matchers', () => {
         for (const matcherName of [
@@ -50,92 +50,80 @@ describe('matchers', () => {
             'toHaveCssValue',
         ] as MatcherName[]) {
             it(`should add ${matcherName}`, () => {
-                expect(expect({})[matcherName]).toBeUndefined();
-                jasmine.addMatchers(matchers);
-                expect(expect({})[matcherName]).toEqual(jasmine.any(Function))
+                expect(expectAsync({})[matcherName]).toBeUndefined();
+                jasmine.addAsyncMatchers(matchers);
+                expect(expectAsync({})[matcherName]).toEqual(jasmine.any(Function))
             });
         }
 
         it(`should override the jasmin's default toHaveClass`, () => {
-            const orig = expect({}).toHaveClass;
-            expect(expect({}).toHaveClass).toBe(orig);
-            jasmine.addMatchers(matchers);
-            expect(expect({}).toHaveClass).not.toBe(orig);
+            const orig = expectAsync({}).toHaveClass;
+            expect(expectAsync({}).toHaveClass).toBe(orig);
+            jasmine.addAsyncMatchers(matchers);
+            expect(expectAsync({}).toHaveClass).not.toBe(orig);
         });
 
         it(`should override the jasmin's default toHaveSize`, () => {
-            const orig = expect({}).toHaveSize;
-            expect(expect({}).toHaveSize).toBe(orig);
-            jasmine.addMatchers(matchers);
-            expect(expect({}).toHaveSize).not.toBe(orig);
+            const orig = expectAsync({}).toHaveSize;
+            expect(expectAsync({}).toHaveSize).toBe(orig);
+            jasmine.addAsyncMatchers(matchers);
+            expect(expectAsync({}).toHaveSize).not.toBe(orig);
         });
     });
 
     describe('toBePresent()', () => {
         beforeEach(() => {
-            spec.matcher = matchers.toBePresent(null, null);
+            matcher = matchers.toBePresent(null, null);
         });
 
         it('element is present', async () => {
-            spec.element = {
-                isPresent: jasmine.createSpy('isPresent').and.returnValue(Promise.resolve(true)),
-            } as any;
+            element = {
+                isPresent: jasmine.createSpy('isPresent').and.resolveTo(true),
+            };
 
-            const ret = spec.matcher.compare(spec.element);
-            expect(ret).toEqual({
-                pass: jasmine.any(Promise),
+            expect(await matcher.compare(element)).toEqual({
+                pass: true,
+                message: 'Expected NOT to be present',
             });
-            const resolvedPass = await ret.pass;
-            expect(resolvedPass).toBe(true);
-            expect(ret.message).toBe('Expected NOT to be present')
         });
 
         it('element is NOT present', async () => {
-            spec.element = {
-                isPresent: jasmine.createSpy('isPresent').and.returnValue(Promise.resolve(false)),
-            } as any;
+            element = {
+                isPresent: jasmine.createSpy('isPresent').and.resolveTo(false),
+            };
 
-            const ret = spec.matcher.compare(spec.element);
-            expect(ret).toEqual({
-                pass: jasmine.any(Promise),
+            expect(await matcher.compare(element)).toEqual({
+                pass: false,
+                message: 'Expected to be present',
             });
-            const resolvedPass = await ret.pass;
-            expect(resolvedPass).toBe(false);
-            expect(ret.message).toBe('Expected to be present')
         });
     });
 
     describe('toBeDisplayed()', () => {
         beforeEach(() => {
-            spec.matcher = matchers.toBeDisplayed(null, null);
+            matcher = matchers.toBeDisplayed(null, null);
         });
 
         it('element is present', async () => {
-            spec.element = {
-                isDisplayed: jasmine.createSpy('isDisplayed').and.returnValue(Promise.resolve(true)),
-            } as any;
+            element = {
+                isDisplayed: jasmine.createSpy('isDisplayed').and.resolveTo(true),
+            };
 
-            const ret = spec.matcher.compare(spec.element);
-            expect(ret).toEqual({
-                pass: jasmine.any(Promise),
+            expect(await matcher.compare(element)).toEqual({
+                pass: true,
+                message: 'Expected NOT to be displayed',
             });
-            const resolvedPass = await ret.pass;
-            expect(resolvedPass).toBe(true);
-            expect(ret.message).toBe('Expected NOT to be displayed')
         });
 
         it('element is NOT present', async () => {
-            spec.element = {
-                isDisplayed: jasmine.createSpy('isDisplayed').and.returnValue(Promise.resolve(false)),
-            } as any;
+            element = {
+                isDisplayed: jasmine.createSpy('isDisplayed').and.resolveTo(false),
+            };
 
-            const ret = spec.matcher.compare(spec.element);
-            expect(ret).toEqual({
-                pass: jasmine.any(Promise),
+            expect(await matcher.compare(element)).toEqual({
+                pass: false,
+                message: 'Expected to be displayed',
             });
-            const resolvedPass = await ret.pass;
-            expect(resolvedPass).toBe(false);
-            expect(ret.message).toBe('Expected to be displayed')
         });
     });
 });

@@ -14,7 +14,7 @@ export interface IElementLocation {
 
 declare global {
     namespace jasmine {
-        interface Matchers<T> {
+        interface AsyncMatchers<T, U> {
             toBePresent(): boolean
 
             toBeDisplayed(): boolean
