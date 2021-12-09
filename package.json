@@ -35,6 +35,7 @@
     "@types/tinycolor2": "^1.4.3",
     "gulp": "^4.0.2",
     "jasmine": "^3.10.0",
+    "np": "^7.6.0",
     "protractor": "^7.0.0"
   }
 }
