@@ -1,4 +1,5 @@
 import { ElementFinder } from 'protractor';
+import { setDefaultTimeout } from './config';
 import { matchers } from './matchers'
 import CustomAsyncMatcher = jasmine.CustomAsyncMatcher;
 
@@ -29,6 +30,7 @@ describe('matchers', () => {
         element = {
             locator: () => '[locator]',
         };
+        setDefaultTimeout(0);
     });
 
     afterEach((): void => {

@@ -2,22 +2,12 @@ import { ElementFinder } from 'protractor'
 import * as Tinycolor2 from 'tinycolor2'
 import * as Util from 'util'
 import { ICssValueCompareOptions, IElementLocation, IElementSize } from './types'
+import { addTimeoutToAsyncMatcher, wrapString } from './utils';
 import difference = require('lodash.difference');
 import intersection = require('lodash.intersection');
 
 
-/**
- * Wrap a string to be displayed in an error message so that it will be easy to copy
- * it from the console
- *
- * @param str
- */
-function wrapString(str: string): string {
-    return `[\n${str}\n]"`;
-}
-
-
-export const matchers: jasmine.CustomAsyncMatcherFactories = {
+const _matchers: jasmine.CustomAsyncMatcherFactories = {
     toBePresent: () => {
         return {
             compare: async (element: ElementFinder) => {
@@ -408,3 +398,8 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
         };
     },
 };
+
+export const matchers: jasmine.CustomAsyncMatcherFactories = {};
+for (const [name, matcher] of Object.entries(_matchers)) {
+    matchers[name] = addTimeoutToAsyncMatcher(matcher);
+}
