@@ -29,7 +29,10 @@ function wrapCompareFunction(
 ): AsyncCompare {
     return async function (arg1: any, ...args: any[]) {
         if (!defaultTimeout) {
-            return await origCompare(arg1, ...args);
+            const result = await origCompare(arg1, ...args);
+            if (negate) result.pass = !result.pass
+            if (result.pass) delete result.message;
+            return result;
         }
 
         let lastResult: CustomMatcherResult = {
@@ -39,11 +42,14 @@ function wrapCompareFunction(
         try {
             await browser.wait(async () => {
                 lastResult = await origCompare(arg1, ...args);
-                return negate
-                    ? !lastResult.pass
-                    : lastResult.pass;
+                if (negate) lastResult.pass = !lastResult.pass;
+                return lastResult.pass;
             }, defaultTimeout);
-            return lastResult;
+            return lastResult.pass
+                ? {
+                    pass: true,
+                }
+                : lastResult;
         } catch (err) {
             if (isTimeoutError(err)) {
                 lastResult.message += ` (waited for ${defaultTimeout}ms)`;

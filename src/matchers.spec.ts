@@ -1,8 +1,8 @@
-import { ElementFinder } from 'protractor';
-import { setDefaultTimeout } from './config';
+import type { ElementFinder } from 'protractor';
+import { ProtractorBrowser } from 'protractor';
+import { defaultTimeout, setDefaultTimeout } from './config';
 import { matchers } from './matchers'
 import CustomAsyncMatcher = jasmine.CustomAsyncMatcher;
-
 
 type MatcherName =
     | 'toBePresent'
@@ -30,7 +30,6 @@ describe('matchers', () => {
         element = {
             locator: () => '[locator]',
         };
-        setDefaultTimeout(0);
     });
 
     afterEach((): void => {
@@ -79,51 +78,170 @@ describe('matchers', () => {
         });
     });
 
-    describe('toBePresent()', () => {
+    describe('matchers', () => {
         beforeEach(() => {
-            matcher = matchers.toBePresent(null, null);
+            (global as any).protractor = {
+                browser: {
+                    async wait(condition: () => Promise<boolean>): Promise<void> {
+                        if (!await condition()) {
+                            const error = new Error('Mock Timeout error');
+                            error.name = 'TimeoutError';
+                            throw error;
+                        }
+                    },
+                } as unknown as ProtractorBrowser,
+            };
         });
 
-        it('element is present', async () => {
-            element.isPresent = jasmine.createSpy('isPresent').and.resolveTo(true);
+        const testMatchers = (addSuffix = false): void => {
+            const suffix = addSuffix
+                ? ' (waited for 5000ms)'
+                : '';
 
-            expect(await matcher.compare(element)).toEqual({
-                pass: true,
-                message: 'Expected [locator] NOT to be present',
+            describe('toBePresent()', () => {
+                beforeEach(() => {
+                    matcher = matchers.toBePresent(null, null);
+                });
+
+                describe('when element is present', () => {
+                    beforeEach(() => {
+                        element.isPresent = jasmine.createSpy('isPresent').and.resolveTo(true);
+                    });
+
+                    it('compare', async () => {
+                        expect(await matcher.compare(element)).toEqual({
+                            pass: true,
+                        });
+                    });
+
+                    it('negativeCompare', async () => {
+                        expect(await matcher.negativeCompare(element)).toEqual({
+                            pass: false,
+                            message: `Expected [locator] NOT to be present${suffix}`,
+                        });
+                    });
+                });
+
+                describe('when element is NOT present', () => {
+                    beforeEach(() => {
+                        element.isPresent = jasmine.createSpy('isPresent').and.resolveTo(false);
+                    });
+
+                    it('compare', async () => {
+                        expect(await matcher.compare(element)).toEqual({
+                            pass: false,
+                            message: `Expected [locator] to be present${suffix}`,
+                        });
+                    });
+
+                    it('negativeCompare', async () => {
+                        expect(await matcher.negativeCompare(element)).toEqual({
+                            pass: true,
+                        });
+                    });
+                });
             });
-        });
 
-        it('element is NOT present', async () => {
-            element.isPresent = jasmine.createSpy('isPresent').and.resolveTo(false);
+            describe('toBeDisplayed()', () => {
+                beforeEach(() => {
+                    matcher = matchers.toBeDisplayed(null, null);
+                });
 
-            expect(await matcher.compare(element)).toEqual({
-                pass: false,
-                message: 'Expected [locator] to be present',
+                describe('when element is displayed', () => {
+                    beforeEach(() => {
+                        element.isDisplayed = jasmine.createSpy('isDisplayed').and.resolveTo(true);
+                    });
+
+                    it('compare', async () => {
+                        expect(await matcher.compare(element)).toEqual({
+                            pass: true,
+                        });
+                    });
+
+                    it('negativeCompare', async () => {
+                        expect(await matcher.negativeCompare(element)).toEqual({
+                            pass: false,
+                            message: `Expected [locator] NOT to be displayed${suffix}`,
+                        });
+                    });
+                });
+
+                describe('when element is NOT displayed', () => {
+                    beforeEach(() => {
+                        element.isDisplayed = jasmine.createSpy('isDisplayed').and.resolveTo(false);
+                    });
+
+                    it('compare', async () => {
+                        expect(await matcher.compare(element)).toEqual({
+                            pass: false,
+                            message: `Expected [locator] to be displayed${suffix}`,
+                        });
+                    });
+
+                    it('negativeCompare', async () => {
+                        expect(await matcher.negativeCompare(element)).toEqual({
+                            pass: true,
+                        });
+                    });
+                });
             });
-        });
-    });
 
-    describe('toBeDisplayed()', () => {
-        beforeEach(() => {
-            matcher = matchers.toBeDisplayed(null, null);
-        });
+            describe('toHaveClass', () => {
+                beforeEach(() => {
+                    element.getAttribute = jasmine.createSpy('getAttribute').and.resolveTo('class1 class2');
 
-        it('element is present', async () => {
-            element.isDisplayed = jasmine.createSpy('isDisplayed').and.resolveTo(true);
+                    matcher = matchers.toHaveClass(null, null);
+                });
 
-            expect(await matcher.compare(element)).toEqual({
-                pass: true,
-                message: 'Expected [locator] NOT to be displayed',
+                describe('compare', () => {
+                    it('success', async () => {
+                        expect(await matcher.compare(element, 'class1 class2')).toEqual({
+                            pass: true,
+                        });
+                    });
+
+                    it('failure', async () => {
+                        expect(await matcher.compare(element, 'class1 class3')).toEqual({
+                            pass: false,
+                            message: `Expected [locator] to have classes [class1, class3] but does not have classes [class3], actual classes are [class1, class2]${suffix}`,
+                        });
+                    });
+                });
+
+                describe('negativeCompare', () => {
+                    it('success', async () => {
+                        expect(await matcher.negativeCompare(element, 'class3')).toEqual({
+                            pass: true,
+                        });
+                    });
+
+                    it('failure', async () => {
+                        expect(await matcher.negativeCompare(element, 'class1')).toEqual({
+                            pass: false,
+                            message: `Expected [locator] to NOT have class [class1], actual classes are [class1, class2]${suffix}`,
+                        });
+                    });
+                });
             });
+        }
+
+        describe('when defaultTimeout is > 0 (default)', () => {
+            testMatchers(true);
         });
 
-        it('element is NOT present', async () => {
-            element.isDisplayed = jasmine.createSpy('isDisplayed').and.resolveTo(false);
+        describe('when defaultTimeout is 0', () => {
+            let origDefaultTimeout: number;
 
-            expect(await matcher.compare(element)).toEqual({
-                pass: false,
-                message: 'Expected [locator] to be displayed',
+            beforeEach(() => {
+                origDefaultTimeout = defaultTimeout;
+                setDefaultTimeout(0);
             });
+
+            afterEach(() => {
+                setDefaultTimeout(origDefaultTimeout);
+            });
+
+            testMatchers();
         });
     });
 });

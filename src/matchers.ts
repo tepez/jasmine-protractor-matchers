@@ -1,4 +1,4 @@
-import { ElementFinder } from 'protractor'
+import type { ElementFinder } from 'protractor'
 import * as Tinycolor2 from 'tinycolor2'
 import * as Util from 'util'
 import { ICssValueCompareOptions, IElementLocation, IElementSize } from './types'
