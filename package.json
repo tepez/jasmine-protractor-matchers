@@ -7,6 +7,9 @@
   "scripts": {
     "build": "npx gulp build",
     "test": "npx gulp build-unit-test",
+    "test-debug": "npx --node-options=--inspect-brk gulp build-unit-test",
+    "dev": "npx gulp dev-unit-test",
+    "dev-debug": "npx --node-options=\"--inspect-brk\" gulp dev-unit-test",
     "update": "npx gulp build && npx np --no-publish"
   },
   "repository": {
