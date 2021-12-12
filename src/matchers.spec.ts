@@ -25,6 +25,12 @@ describe('matchers', () => {
     let matcher: CustomAsyncMatcher;
     let element: Partial<ElementFinder>;
 
+    beforeEach(() => {
+        element = {
+            locator: () => '[locator]',
+        };
+    });
+
     afterEach((): void => {
         matcher = null;
         element = null;
@@ -77,24 +83,20 @@ describe('matchers', () => {
         });
 
         it('element is present', async () => {
-            element = {
-                isPresent: jasmine.createSpy('isPresent').and.resolveTo(true),
-            };
+            element.isPresent = jasmine.createSpy('isPresent').and.resolveTo(true);
 
             expect(await matcher.compare(element)).toEqual({
                 pass: true,
-                message: 'Expected NOT to be present',
+                message: 'Expected [locator] NOT to be present',
             });
         });
 
         it('element is NOT present', async () => {
-            element = {
-                isPresent: jasmine.createSpy('isPresent').and.resolveTo(false),
-            };
+            element.isPresent = jasmine.createSpy('isPresent').and.resolveTo(false);
 
             expect(await matcher.compare(element)).toEqual({
                 pass: false,
-                message: 'Expected to be present',
+                message: 'Expected [locator] to be present',
             });
         });
     });
@@ -105,24 +107,20 @@ describe('matchers', () => {
         });
 
         it('element is present', async () => {
-            element = {
-                isDisplayed: jasmine.createSpy('isDisplayed').and.resolveTo(true),
-            };
+            element.isDisplayed = jasmine.createSpy('isDisplayed').and.resolveTo(true);
 
             expect(await matcher.compare(element)).toEqual({
                 pass: true,
-                message: 'Expected NOT to be displayed',
+                message: 'Expected [locator] NOT to be displayed',
             });
         });
 
         it('element is NOT present', async () => {
-            element = {
-                isDisplayed: jasmine.createSpy('isDisplayed').and.resolveTo(false),
-            };
+            element.isDisplayed = jasmine.createSpy('isDisplayed').and.resolveTo(false);
 
             expect(await matcher.compare(element)).toEqual({
                 pass: false,
-                message: 'Expected to be displayed',
+                message: 'Expected [locator] to be displayed',
             });
         });
     });

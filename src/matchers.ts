@@ -23,7 +23,7 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
             compare: async (element: ElementFinder) => {
                 const isPresent = await element.isPresent();
                 const pass = !!isPresent;
-                const message = `Expected ${pass ? 'NOT ' : ''}to be present`;
+                const message = `Expected ${element.locator()} ${pass ? 'NOT ' : ''}to be present`;
                 return {
                     pass,
                     message,
@@ -37,7 +37,7 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
             compare: async (element: ElementFinder) => {
                 const isDisplayed = await element.isDisplayed();
                 const pass = !!isDisplayed;
-                const message = `Expected ${pass ? 'NOT ' : ''}to be displayed`;
+                const message = `Expected ${element.locator()} ${pass ? 'NOT ' : ''}to be displayed`;
                 return {
                     pass,
                     message,
@@ -54,9 +54,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
                 const actualText = await element.getText();
                 const pass = actualText.indexOf(expectedText.trim()) >= 0;
                 if (pass) {
-                    message = `Expected NOT to contain text ${wrapString(expectedText)} BUT text is ${wrapString(actualText)}`;
+                    message = `Expected ${element.locator()} NOT to contain text ${wrapString(expectedText)} BUT text is ${wrapString(actualText)}`;
                 } else {
-                    message = `Expected to contain text ${wrapString(expectedText)} BUT text is ${wrapString(actualText)}`;
+                    message = `Expected ${element.locator()} to contain text ${wrapString(expectedText)} BUT text is ${wrapString(actualText)}`;
                 }
                 return {
                     pass,
@@ -74,9 +74,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
                 const actualText = await element.getText();
                 const pass = actualText.trim() === expectedText.trim();
                 if (pass) {
-                    message = `Expected NOT to have text ${wrapString(expectedText)}`;
+                    message = `Expected ${element.locator()} NOT to have text ${wrapString(expectedText)}`;
                 } else {
-                    message = `Expected to have text ${wrapString(expectedText)} BUT has text ${wrapString(actualText)}`;
+                    message = `Expected ${element.locator()} to have text ${wrapString(expectedText)} BUT has text ${wrapString(actualText)}`;
                 }
 
                 return {
@@ -104,9 +104,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
 
                 const pass = regex.test(actualText);
                 if (pass) {
-                    message = `Expected NOT to have match ${pattern}, BUT text is ${wrapString(actualText)}`;
+                    message = `Expected ${element.locator()} NOT to have match ${pattern}, BUT text is ${wrapString(actualText)}`;
                 } else {
-                    message = `Expected to match ${pattern}, BUT text is ${wrapString(actualText)}`;
+                    message = `Expected ${element.locator()} to match ${pattern}, BUT text is ${wrapString(actualText)}`;
                 }
 
                 return {
@@ -126,9 +126,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
 
                 const pass = actualValue === expectedValue;
                 if (pass) {
-                    message = `Expected NOT to have value ${wrapString(expectedValue)}`;
+                    message = `Expected ${element.locator()} NOT to have value ${wrapString(expectedValue)}`;
                 } else {
-                    message = `Expected to have value ${wrapString(expectedValue)} BUT has value ${wrapString(actualValue)}`;
+                    message = `Expected ${element.locator()} to have value ${wrapString(expectedValue)} BUT has value ${wrapString(actualValue)}`;
                 }
 
                 return {
@@ -148,9 +148,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
 
                 const pass = actualValue === expectedValue;
                 if (pass) {
-                    message = `Expected NOT to have ${attribute} ${wrapString(expectedValue)}`;
+                    message = `Expected ${element.locator()} NOT to have ${attribute} ${wrapString(expectedValue)}`;
                 } else {
-                    message = `Expected to have ${attribute} ${wrapString(expectedValue)} BUT has ${attribute} ${wrapString(actualValue)}`;
+                    message = `Expected ${element.locator()} to have ${attribute} ${wrapString(expectedValue)} BUT has ${attribute} ${wrapString(actualValue)}`;
                 }
 
                 return {
@@ -192,7 +192,7 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
                 const checked = await element.getAttribute('checked');
 
                 const pass = checked === 'true';
-                message = `Expected ${pass ? ' NOT ' : ''} to be checked`;
+                message = `Expected ${element.locator()} ${pass ? ' NOT ' : ''} to be checked`;
 
                 return {
                     pass,
@@ -210,7 +210,7 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
                 const isSelected = await element.isSelected();
 
                 const pass = !!isSelected;
-                message = `Expected ${pass ? ' NOT ' : ''} to be selected`;
+                message = `Expected ${element.locator()} ${pass ? ' NOT ' : ''} to be selected`;
 
                 return {
                     pass,
@@ -229,9 +229,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
 
                 const pass = size.width == expectedWidth;
                 if (pass) {
-                    message = `Expected NOT to have width ${expectedWidth}`;
+                    message = `Expected ${element.locator()} NOT to have width ${expectedWidth}`;
                 } else {
-                    message = `Expected to have width ${expectedWidth} BUT has width ${size.width}`;
+                    message = `Expected ${element.locator()} to have width ${expectedWidth} BUT has width ${size.width}`;
                 }
 
                 return {
@@ -256,9 +256,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
                 const pass = actualSize.width === expectedSize.width &&
                     actualSize.height === expectedSize.height;
                 if (pass) {
-                    message = `Expected NOT to have size ${sizeToString(expectedSize)}`;
+                    message = `Expected ${element.locator()} NOT to have size ${sizeToString(expectedSize)}`;
                 } else {
-                    message = `Expected to have size ${sizeToString(expectedSize)}} BUT has size ${sizeToString(actualSize)}`;
+                    message = `Expected ${element.locator()} to have size ${sizeToString(expectedSize)}} BUT has size ${sizeToString(actualSize)}`;
                 }
 
                 return {
@@ -278,9 +278,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
 
                 const pass = actualLocation.x === expectedX;
                 if (pass) {
-                    message = `Expected to be at location X ${expectedX} but is at location X ${actualLocation.x}`;
+                    message = `Expected ${element.locator()} to be at location X ${expectedX} but is at location X ${actualLocation.x}`;
                 } else {
-                    message = `Expected NOT to be at location X ${expectedX}`;
+                    message = `Expected ${element.locator()} NOT to be at location X ${expectedX}`;
                 }
 
                 return {
@@ -309,7 +309,7 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
                 );
 
                 const pass = distance <= maxDistance;
-                message = `Expected ${pass ? ' NOT' : ''} to be near ${formatCoordinates(expectedLocation)} but is at ${formatCoordinates((actualLocation))}, ${distance} pixels from it.`;
+                message = `Expected ${element.locator()} ${pass ? ' NOT' : ''} to be near ${formatCoordinates(expectedLocation)} but is at ${formatCoordinates((actualLocation))}, ${distance} pixels from it.`;
 
                 return {
                     pass,
@@ -331,9 +331,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
                 const notSatisfiedClassesArr = difference(expectedClassesArr, actualClassesArr);
 
                 if (expectedClassesArr.length === 1) {
-                    message = `Expected to have class [${expectedClassesArr[0]}], actual classes are [${actualClassesArr.join(', ')}]`;
+                    message = `Expected ${element.locator()} to have class [${expectedClassesArr[0]}], actual classes are [${actualClassesArr.join(', ')}]`;
                 } else {
-                    message = `Expected to have classes [${expectedClassesArr.join(', ')}] but does not have classes [${notSatisfiedClassesArr.join(', ')}], actual classes are [${actualClassesArr.join(', ')}]`;
+                    message = `Expected ${element.locator()} to have classes [${expectedClassesArr.join(', ')}] but does not have classes [${notSatisfiedClassesArr.join(', ')}], actual classes are [${actualClassesArr.join(', ')}]`;
                 }
 
                 const pass = notSatisfiedClassesArr.length === 0;
@@ -354,9 +354,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
                 const satisfiedClassesArr = intersection(forbiddenClassesArr, actualClassesArr);
 
                 if (forbiddenClassesArr.length === 1) {
-                    message = `Expected to NOT have class [${forbiddenClassesArr[0]}], actual classes are [${actualClassesArr.join(', ')}]`;
+                    message = `Expected ${element.locator()} to NOT have class [${forbiddenClassesArr[0]}], actual classes are [${actualClassesArr.join(', ')}]`;
                 } else {
-                    message = `Expected to NOT have classes [${forbiddenClassesArr.join(', ')}] but does have classes [${satisfiedClassesArr.join(', ')}], actual classes are [${actualClassesArr.join(', ')}]`;
+                    message = `Expected ${element.locator()} to NOT have classes [${forbiddenClassesArr.join(', ')}] but does have classes [${satisfiedClassesArr.join(', ')}], actual classes are [${actualClassesArr.join(', ')}]`;
                 }
                 const pass = satisfiedClassesArr.length === 0;
 
@@ -395,9 +395,9 @@ export const matchers: jasmine.CustomAsyncMatcherFactories = {
 
                 const pass = actualValue === expectedValue;
                 if (pass) {
-                    message = `Expected NOT to have value ${wrapString(expectedValue)} for CSS property ${cssProperty}`;
+                    message = `Expected ${element.locator()} NOT to have value ${wrapString(expectedValue)} for CSS property ${cssProperty}`;
                 } else {
-                    message = `Expected to have value ${wrapString(expectedValue)} for CSS property ${cssProperty} BUT has value ${wrapString(actualValue)}`;
+                    message = `Expected ${element.locator()} to have value ${wrapString(expectedValue)} for CSS property ${cssProperty} BUT has value ${wrapString(actualValue)}`;
                 }
 
                 return {
