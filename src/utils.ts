@@ -2,7 +2,6 @@ import { browser } from 'protractor';
 import { defaultTimeout } from './config';
 import CustomAsyncMatcher = jasmine.CustomAsyncMatcher;
 import CustomAsyncMatcherFactory = jasmine.CustomAsyncMatcherFactory;
-import CustomEqualityTester = jasmine.CustomEqualityTester;
 import CustomMatcherResult = jasmine.CustomMatcherResult;
 import MatchersUtil = jasmine.MatchersUtil;
 
@@ -64,9 +63,8 @@ function wrapCompareFunction(
 export function addTimeoutToAsyncMatcher(factory: CustomAsyncMatcherFactory): CustomAsyncMatcherFactory {
     return (
         util: MatchersUtil,
-        customEqualityTesters: ReadonlyArray<CustomEqualityTester>,
     ) => {
-        const matcher = factory(util, customEqualityTesters);
+        const matcher = factory(util, undefined);
         return {
             compare: wrapCompareFunction(matcher.compare, false),
             negativeCompare: matcher.negativeCompare
