@@ -100,7 +100,7 @@ describe('matchers', () => {
 
             describe('toBePresent()', () => {
                 beforeEach(() => {
-                    matcher = matchers.toBePresent(null, null);
+                    matcher = matchers.toBePresent(null);
                 });
 
                 describe('when element is present', () => {
@@ -144,7 +144,7 @@ describe('matchers', () => {
 
             describe('toBeDisplayed()', () => {
                 beforeEach(() => {
-                    matcher = matchers.toBeDisplayed(null, null);
+                    matcher = matchers.toBeDisplayed(null);
                 });
 
                 describe('when element is displayed', () => {
@@ -190,7 +190,7 @@ describe('matchers', () => {
                 beforeEach(() => {
                     element.getAttribute = jasmine.createSpy('getAttribute').and.resolveTo('class1 class2');
 
-                    matcher = matchers.toHaveClass(null, null);
+                    matcher = matchers.toHaveClass(null);
                 });
 
                 describe('compare', () => {

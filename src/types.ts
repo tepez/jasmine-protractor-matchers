@@ -15,37 +15,37 @@ export interface IElementLocation {
 declare global {
     namespace jasmine {
         interface AsyncMatchers<T, U> {
-            toBePresent(): boolean
+            toBePresent(): Promise<boolean>
 
-            toBeDisplayed(): boolean
+            toBeDisplayed(): Promise<boolean>
 
-            toContainText(expectedText: string): boolean
+            toContainText(expectedText: string): Promise<boolean>
 
-            toHaveExactText(expectedText: string): boolean
+            toHaveExactText(expectedText: string): Promise<boolean>
 
-            toHaveTextMatchedBy(pattern: string | RegExp): boolean
+            toHaveTextMatchedBy(pattern: string | RegExp): Promise<boolean>
 
-            toHaveValue(expectedValue: string): boolean
+            toHaveValue(expectedValue: string): Promise<boolean>
 
-            toHaveAttribute(attribute: string, expectedValue: string): boolean
+            toHaveAttribute(attribute: string, expectedValue: string): Promise<boolean>
 
-            toMatchAttribute(attribute: string, expectedValue: string | RegExp): boolean
+            toMatchAttribute(attribute: string, expectedValue: string | RegExp): Promise<boolean>
 
-            toBeChecked(): boolean
+            toBeChecked(): Promise<boolean>
 
-            toBeSelected(): boolean
+            toBeSelected(): Promise<boolean>
 
-            toHaveWidth(expectedWidth: number): boolean
+            toHaveWidth(expectedWidth: number): Promise<boolean>
 
-            toHaveSize(expectedSize: { width: number, height: number }): boolean
+            toHaveSize(expectedSize: { width: number, height: number }): Promise<boolean>
 
-            toHaveClass(expectedClasses: string): boolean
+            toHaveClass(expectedClasses: string): Promise<boolean>
 
-            toBeAtLocationX(expectedX: number): boolean
+            toBeAtLocationX(expectedX: number): Promise<boolean>
 
-            toBeNearLocation(expectedLocation: IElementLocation, maxDistance?: number): boolean
+            toBeNearLocation(expectedLocation: IElementLocation, maxDistance?: number): Promise<boolean>
 
-            toHaveCssValue(toHaveCssValue: string, expectedValue: string, options?: ICssValueCompareOptions): boolean
+            toHaveCssValue(toHaveCssValue: string, expectedValue: string, options?: ICssValueCompareOptions): Promise<boolean>
         }
     }
 }
