@@ -1,5 +1,11 @@
 {
   "extends": "./node_modules/@tepez/typescript-common/tsconfig-node",
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts"
+  ],
   "compilerOptions": {
     "outDir": "dist",
     "declaration": true,

@@ -64,7 +64,7 @@ export function addTimeoutToAsyncMatcher(factory: CustomAsyncMatcherFactory): Cu
     return (
         util: MatchersUtil,
     ) => {
-        const matcher = factory(util, undefined);
+        const matcher = factory(util);
         return {
             compare: wrapCompareFunction(matcher.compare, false),
             negativeCompare: matcher.negativeCompare

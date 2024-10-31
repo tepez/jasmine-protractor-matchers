@@ -15,30 +15,29 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npx gulp build",
-    "dev": "npx gulp dev-unit-test",
-    "dev-debug": "npx --node-options=\"--inspect-brk\" gulp dev-unit-test",
-    "test": "npx gulp build-unit-test",
-    "test-debug": "npx --node-options=--inspect-brk gulp build-unit-test",
-    "update": "npx gulp build && npx np --no-publish"
+    "build": "npm run clean && tsc",
+    "clean": "del-cli dist",
+    "dev": "nodemon --watch \"src/**\" --ext ts --exec \"node -r ts-node/register/transpile-only node_modules/jasmine/bin/jasmine.js --config=node_modules/@tepez/typescript-build-gulp-tasks/dist/jasmine/dev.js\"",
+    "dev-debug": "nodemon --watch \"src/**\" --ext ts --exec \"node -r ts-node/register/transpile-only --inspect node_modules/jasmine/bin/jasmine.js --config=node_modules/@tepez/typescript-build-gulp-tasks/dist/jasmine/dev.js\"",
+    "test": "node -r ts-node/register/transpile-only node_modules/jasmine/bin/jasmine.js --config=node_modules/@tepez/typescript-build-gulp-tasks/dist/jasmine/build.js",
+    "test-debug": "node -r ts-node/register/transpile-only --inspect-brk node_modules/jasmine/bin/jasmine.js --config=node_modules/@tepez/typescript-build-gulp-tasks/dist/jasmine/build.js",
+    "update": "npm run build && npx np --no-publish"
   },
   "dependencies": {
     "lodash.difference": "^4.5.0",
     "lodash.intersection": "^4.4.0",
-    "tinycolor2": "^1.4.2"
+    "tinycolor2": "^1.6.0"
   },
   "devDependencies": {
-    "@tepez/typescript-build-gulp-tasks": "^6.5.1",
-    "@tepez/typescript-common": "^0.2.2",
-    "@types/gulp": "^4.0.9",
-    "@types/jasmine": "^3.10.3",
-    "@types/lodash.difference": "^4.5.6",
-    "@types/lodash.intersection": "^4.4.6",
+    "@tepez/typescript-build-gulp-tasks": "^8.0.0",
+    "@tepez/typescript-common": "^2.0.0",
+    "@types/jasmine": "^5.1.4",
+    "@types/lodash.difference": "^4.5.9",
+    "@types/lodash.intersection": "^4.4.9",
     "@types/node": "*",
-    "@types/tinycolor2": "^1.4.3",
-    "gulp": "^4.0.2",
-    "jasmine": "^3.99.0",
-    "np": "^7.6.0",
+    "@types/tinycolor2": "^1.4.6",
+    "jasmine": "^5.4.0",
+    "np": "^10.0.7",
     "protractor": "^7.0.0"
   }
 }
