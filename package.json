@@ -2,26 +2,26 @@
   "name": "@tepez/jasmine-protractor-matchers",
   "version": "2.1.0",
   "description": "Custom jasmine2 matchers for writing cleaner e2e tests with protractor",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "npx gulp build",
-    "test": "npx gulp build-unit-test",
-    "test-debug": "npx --node-options=--inspect-brk gulp build-unit-test",
-    "dev": "npx gulp dev-unit-test",
-    "dev-debug": "npx --node-options=\"--inspect-brk\" gulp dev-unit-test",
-    "update": "npx gulp build && npx np --no-publish"
+  "homepage": "https://github.com/tepez/jasmine-protractor-matchers#readme",
+  "bugs": {
+    "url": "https://github.com/tepez/jasmine-protractor-matchers/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tepez/jasmine-protractor-matchers.git"
   },
-  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/tepez/jasmine-protractor-matchers/issues"
+  "author": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "npx gulp build",
+    "dev": "npx gulp dev-unit-test",
+    "dev-debug": "npx --node-options=\"--inspect-brk\" gulp dev-unit-test",
+    "test": "npx gulp build-unit-test",
+    "test-debug": "npx --node-options=--inspect-brk gulp build-unit-test",
+    "update": "npx gulp build && npx np --no-publish"
   },
-  "homepage": "https://github.com/tepez/jasmine-protractor-matchers#readme",
   "dependencies": {
     "lodash.difference": "^4.5.0",
     "lodash.intersection": "^4.4.0",
